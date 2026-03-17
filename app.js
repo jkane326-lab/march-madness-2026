@@ -146,23 +146,45 @@ function clearFutureRounds(startId, oldWinner) {
 }
 
 // 3. PDF GENERATION (Fixed squishing)
+// 3. PDF GENERATION (Fixed Centering & Squishing Bugs)
 function downloadPDF() {
     const element = document.getElementById('pdf-content');
+    const btn = document.querySelector('.pdf-btn');
+    const originalText = btn.textContent;
+    btn.textContent = "Generating PDF...";
+    
+    // CRITICAL PDF FIXES:
+    // 1. Force a strict width so mobile screens don't squish it.
+    // 2. Remove auto-margins temporarily so the PDF "camera" doesn't take an off-center picture.
+    const originalWidth = element.style.width;
+    const originalMargin = element.style.margin;
+    
+    element.style.width = '800px';
+    element.style.margin = '0'; 
     element.style.backgroundColor = "white";
-    element.style.padding = "20px";
+    element.style.padding = "30px"; // Gives it a nice border in the PDF
     
     const opt = {
-        margin:       [0.5, 0.5, 0.5, 0.5], 
+        margin:       0.2, // Small margin so the 800px width fits on the page
         filename:     `TPS_Report_${currentDivision}_2026.pdf`,
         image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { scale: 2, scrollY: 0, windowWidth: 800 },
+        html2canvas:  { 
+            scale: 2, 
+            scrollY: 0, 
+            scrollX: 0,       // FORCES the camera to start at the absolute left edge
+            windowWidth: 850  // Gives the virtual window room for the 800px element
+        },
         pagebreak:    { mode: ['css', 'legacy'] },
-        jsPDF:        { unit: 'in', format: 'legal', orientation: 'portrait' }
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
     
     html2pdf().set(opt).from(element).save().then(() => {
+        // Reset everything back to normal for the user's screen instantly
+        element.style.width = originalWidth;
+        element.style.margin = originalMargin;
         element.style.backgroundColor = "transparent";
         element.style.padding = "0";
+        btn.textContent = originalText;
     });
 }
 
