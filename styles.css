@@ -66,6 +66,9 @@ header {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid var(--border);
+    /* Add these two lines to stop the PDF from slicing games in half across pages */
+    page-break-inside: avoid;
+    break-inside: avoid;
 }
 
 .matchup:last-child {
