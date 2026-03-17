@@ -166,45 +166,65 @@ function clearFutureRounds(startId, oldWinner) {
     }
 }
 
-// 3. PDF GENERATION (The "Auto-Margin" Fix)
+// 3. NATIVE PRINT RECEIPT (Bulletproof Alternative to html2pdf)
 function downloadPDF() {
-    window.scrollTo(0, 0);
-    const element = document.getElementById('pdf-content');
-    const mainContainer = document.querySelector('.container'); // We must grab the parent container!
-    
-    const btn = document.querySelector('.pdf-btn');
-    const originalText = btn.textContent;
-    btn.textContent = "Generating PDF...";
-    
-    // CRITICAL FIX: Strip the centering from the whole page so the PDF camera starts at zero
-    const originalMargin = mainContainer.style.margin;
-    const originalMaxWidth = mainContainer.style.maxWidth;
-    
-    mainContainer.style.margin = '0';
-    mainContainer.style.maxWidth = '800px';
-    element.style.padding = '15px'; // Add a clean white border
-    
-    const opt = {
-        margin:       0.2, 
-        filename:     `TPS_Report_${currentDivision}_2026.pdf`,
-        image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { 
-            scale: 2, 
-            windowWidth: 850, // Give the camera slightly more room than the 800px container
-            scrollX: 0,
-            scrollY: 0
-        },
-        pagebreak:    { mode: ['css', 'legacy'] },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    
-    html2pdf().set(opt).from(element).save().then(() => {
-        // Put the page back exactly how we found it
-        mainContainer.style.margin = originalMargin;
-        mainContainer.style.maxWidth = originalMaxWidth;
-        element.style.padding = '0';
-        btn.textContent = originalText;
+    const games = bracketData[currentDivision];
+    const divisionName = currentDivision === 'mens' ? "Men's Division" : "Women's Division";
+
+    // Build a clean HTML receipt
+    let receiptHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>${divisionName} Picks Receipt</title>
+        <style>
+            body { font-family: 'Arial', sans-serif; padding: 40px; color: #333; line-height: 1.6; max-width: 800px; margin: auto; }
+            h1 { color: #0056b3; border-bottom: 2px solid #ff8c00; padding-bottom: 10px; }
+            h2 { margin-top: 30px; color: #555; background: #f4f7f6; padding: 10px; border-radius: 4px; }
+            ul { list-style-type: none; padding: 0; }
+            li { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+            .matchup-text { color: #666; font-size: 0.9em; }
+            .winner { font-weight: bold; color: #0056b3; font-size: 1.1em; }
+            .no-pick { color: #999; font-style: italic; }
+            @media print { body { padding: 0; } }
+        </style>
+    </head>
+    <body>
+        <h1>TPS Report Receipt: ${divisionName}</h1>
+        <p><strong>Generated on:</strong> ${new Date().toLocaleDateString()}</p>
+    `;
+
+    // Loop through the rounds and print the matchups + their picks
+    const rounds = [...new Set(games.map(g => g.round))];
+
+    rounds.forEach(roundName => {
+        receiptHTML += `<h2>${roundName}</h2><ul>`;
+        const roundGames = games.filter(g => g.round === roundName);
+        
+        roundGames.forEach(game => {
+            const pick = game.winner ? `<span class="winner">${game.winner}</span>` : `<span class="no-pick">No Pick</span>`;
+            receiptHTML += `
+                <li>
+                    <span class="matchup-text">${game.t1} vs ${game.t2}</span> 
+                    <span>&rarr; ${pick}</span>
+                </li>`;
+        });
+        receiptHTML += `</ul>`;
     });
+
+    receiptHTML += `
+        <script>
+            // Automatically pop open the print dialog when the tab opens
+            window.onload = function() { window.print(); }
+        </script>
+    </body>
+    </html>
+    `;
+
+    // Open a new tab and write the receipt to it
+    const receiptWindow = window.open('', '_blank');
+    receiptWindow.document.write(receiptHTML);
+    receiptWindow.document.close();
 }
 // 4. DATA SUBMISSION
 function setupForm() {
