@@ -166,44 +166,33 @@ function clearFutureRounds(startId, oldWinner) {
     }
 }
 
-// 3. PDF GENERATION (Fixed Centering & Squishing Bugs)
+// 3. PDF GENERATION (Clean & Centered)
 function downloadPDF() {
+    // CRITICAL FIX: Scroll to the absolute top of the page before snapping the picture.
+    // This stops the PDF camera from getting confused about where the left edge is.
+    window.scrollTo(0, 0);
+    
     const element = document.getElementById('pdf-content');
     const btn = document.querySelector('.pdf-btn');
     const originalText = btn.textContent;
     btn.textContent = "Generating PDF...";
     
-    const originalWidth = element.style.width;
-    const originalMargin = element.style.margin;
-    
-    element.style.width = '800px';
-    element.style.margin = '0'; 
-    element.style.backgroundColor = "white";
-    element.style.padding = "30px"; 
-    
     const opt = {
-        margin:       0.2, 
+        margin:       0.4, // Gives it a nice, even border on the physical page
         filename:     `TPS_Report_${currentDivision}_2026.pdf`,
         image:        { type: 'jpeg', quality: 1 },
         html2canvas:  { 
             scale: 2, 
-            scrollY: 0, 
-            scrollX: 0,       
-            windowWidth: 800  
+            windowWidth: 800 // Forces the layout to stay wide like a desktop monitor
         },
         pagebreak:    { mode: ['css', 'legacy'] },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
     
     html2pdf().set(opt).from(element).save().then(() => {
-        element.style.width = originalWidth;
-        element.style.margin = originalMargin;
-        element.style.backgroundColor = "transparent";
-        element.style.padding = "0";
         btn.textContent = originalText;
     });
 }
-
 // 4. DATA SUBMISSION
 function setupForm() {
     const form = document.getElementById('tps-form');
