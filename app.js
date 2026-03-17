@@ -57,11 +57,14 @@ const bracketData = {
 let currentDivision = 'mens';
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderBracket();
-    setupForm();
+    try {
+        renderBracket();
+        setupForm();
+    } catch (error) {
+        document.getElementById('bracket-container').innerHTML = `<p style="color:red; padding: 20px;">System Error: ${error.message}</p>`;
+    }
 });
 
-// Reset the form when swapping brackets
 function switchBracket(division) {
     currentDivision = division;
     document.getElementById('btn-mens').classList.remove('active');
@@ -79,12 +82,14 @@ function switchBracket(division) {
         btn.textContent = "2. Submit to Management";
         btn.disabled = false;
     }
+
     renderBracket();
 }
 
 function renderBracket() {
     const container = document.getElementById('bracket-container');
     container.innerHTML = ''; 
+
     const games = bracketData[currentDivision];
     const rounds = [...new Set(games.map(g => g.round))];
 
@@ -92,16 +97,27 @@ function renderBracket() {
         const roundDiv = document.createElement('div');
         roundDiv.className = 'round-section';
         roundDiv.innerHTML = `<h3 style="color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 5px;">${roundName}</h3>`;
+
         const roundGames = games.filter(g => g.round === roundName);
         
         roundGames.forEach(game => {
+            const isTBD1 = game.t1 === 'TBD';
+            const isTBD2 = game.t2 === 'TBD';
+            
             const safeT1 = game.t1.replace(/'/g, "\\'");
             const safeT2 = game.t2.replace(/'/g, "\\'");
+
             roundDiv.innerHTML += `
                 <div class="matchup" id="${game.id}">
-                    <div class="team-option ${game.winner === game.t1 ? 'selected' : ''} ${game.t1 === 'TBD' ? 'disabled' : ''}" onclick="selectWinner('${game.id}', '${safeT1}')">${game.t1}</div>
+                    <div class="team-option ${game.winner === game.t1 ? 'selected' : ''} ${isTBD1 ? 'disabled' : ''}" 
+                         onclick="selectWinner('${game.id}', '${safeT1}')">
+                        ${game.t1}
+                    </div>
                     <span style="color: #888; font-size: 0.9rem; margin: 0 10px;">vs</span>
-                    <div class="team-option ${game.winner === game.t2 ? 'selected' : ''} ${game.t2 === 'TBD' ? 'disabled' : ''}" onclick="selectWinner('${game.id}', '${safeT2}')">${game.t2}</div>
+                    <div class="team-option ${game.winner === game.t2 ? 'selected' : ''} ${isTBD2 ? 'disabled' : ''}" 
+                         onclick="selectWinner('${game.id}', '${safeT2}')">
+                        ${game.t2}
+                    </div>
                 </div>
             `;
         });
@@ -111,8 +127,10 @@ function renderBracket() {
 
 function selectWinner(gameId, winningTeam) {
     if (winningTeam === 'TBD') return;
+
     const games = bracketData[currentDivision];
     const game = games.find(g => g.id === gameId);
+    
     game.winner = winningTeam;
 
     if (game.nextId) {
@@ -130,6 +148,7 @@ function clearFutureRounds(startId, oldWinner) {
     if (!oldWinner) return;
     const games = bracketData[currentDivision];
     let currentGame = games.find(g => g.id === startId);
+    
     while (currentGame && currentGame.nextId) {
         let nextGame = games.find(g => g.id === currentGame.nextId);
         if (nextGame && nextGame.winner === oldWinner) {
@@ -141,11 +160,12 @@ function clearFutureRounds(startId, oldWinner) {
             if(nextGame.t1 === oldWinner) nextGame.t1 = 'TBD';
             if(nextGame.t2 === oldWinner) nextGame.t2 = 'TBD';
             break;
-        } else break;
+        } else {
+            break;
+        }
     }
 }
 
-// 3. PDF GENERATION (Fixed squishing)
 // 3. PDF GENERATION (Fixed Centering & Squishing Bugs)
 function downloadPDF() {
     const element = document.getElementById('pdf-content');
@@ -153,33 +173,29 @@ function downloadPDF() {
     const originalText = btn.textContent;
     btn.textContent = "Generating PDF...";
     
-    // CRITICAL PDF FIXES:
-    // 1. Force a strict width so mobile screens don't squish it.
-    // 2. Remove auto-margins temporarily so the PDF "camera" doesn't take an off-center picture.
     const originalWidth = element.style.width;
     const originalMargin = element.style.margin;
     
     element.style.width = '800px';
     element.style.margin = '0'; 
     element.style.backgroundColor = "white";
-    element.style.padding = "30px"; // Gives it a nice border in the PDF
+    element.style.padding = "30px"; 
     
     const opt = {
-        margin:       0.2, // Small margin so the 800px width fits on the page
+        margin:       0.2, 
         filename:     `TPS_Report_${currentDivision}_2026.pdf`,
         image:        { type: 'jpeg', quality: 1 },
         html2canvas:  { 
             scale: 2, 
             scrollY: 0, 
-            scrollX: 0,       // FORCES the camera to start at the absolute left edge
-            windowWidth: 850  // Gives the virtual window room for the 800px element
+            scrollX: 0,       
+            windowWidth: 800  
         },
         pagebreak:    { mode: ['css', 'legacy'] },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
     
     html2pdf().set(opt).from(element).save().then(() => {
-        // Reset everything back to normal for the user's screen instantly
         element.style.width = originalWidth;
         element.style.margin = originalMargin;
         element.style.backgroundColor = "transparent";
@@ -188,7 +204,7 @@ function downloadPDF() {
     });
 }
 
-// 4. DATA SUBMISSION (Fixed CORS)
+// 4. DATA SUBMISSION
 function setupForm() {
     const form = document.getElementById('tps-form');
     if(!form) return;
@@ -209,12 +225,12 @@ function setupForm() {
             payload[game.id] = game.winner || "No Pick";
         });
 
-        // Your exact deployment URL
+        // YOUR EXACT GOOGLE SCRIPT URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzQQYOquPiiTDyknM4uRV42Kx4cptyVVV9_NZ0xUrBHsPnP8rhA7A6S8mvXlTXfh5lT/exec'; 
 
         fetch(scriptURL, { 
             method: 'POST', 
-            mode: 'no-cors', 
+            mode: 'no-cors',  // <-- THIS IS THE MAGIC BULLET YOU WERE MISSING
             body: JSON.stringify(payload),
             headers: { "Content-Type": "text/plain;charset=utf-8" },
         })
