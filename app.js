@@ -228,7 +228,7 @@ function setupForm() {
         });
 
         // REPLACE WITH YOUR NEW GOOGLE SCRIPT URL
-        const scriptURL = 'YOUR_GOOGLE_SCRIPT_URL_HERE'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbyM85vzLkko5NdDRn_FDq5-qcGc8raIY03KXEgXvx_QhVVzO6N-CuxF_GBFGV1m1IUp/exec'; 
 
         fetch(scriptURL, { 
             method: 'POST', 
