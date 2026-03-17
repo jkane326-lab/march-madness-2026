@@ -2,51 +2,56 @@
 // List the 64 teams in bracket matchup order (1 vs 16, 8 vs 9, 5 vs 12, etc.)
 
 const mensTeams = [
-    // Region 1 (West/South)
+    // Region 1 (East)
+    "1 Duke", "16 Siena", "8 Ohio St.", "9 TCU", 
+    "5 St. John's", "12 Northern Iowa", "4 Kansas", "13 Cal Baptist",
+    "6 Louisville", "11 South Florida", "3 Michigan St.", "14 North Dakota St.", 
+    "7 UCLA", "10 UCF", "2 UConn", "15 Furman",
+    
+    // Region 2 (South)
+    "1 Florida", "16 Lehigh/PVAMU", "8 Clemson", "9 Iowa", 
+    "5 Vanderbilt", "12 McNeese", "4 Nebraska", "13 Troy",
+    "6 North Carolina", "11 VCU", "3 Illinois", "14 Penn", 
+    "7 Saint Mary's", "10 Texas A&M", "2 Houston", "15 Idaho",
+    
+    // Region 3 (West)
     "1 Arizona", "16 Long Island", "8 Villanova", "9 Utah St.", 
     "5 Wisconsin", "12 High Point", "4 Arkansas", "13 Hawaii",
-    "6 BYU", "11 SMU", "3 Gonzaga", "14 Kennesaw St.", 
-    "7 Miami (FL)", "10 Missouri", "2 Duke", "15 Siena",
-    // Region 2
-    "1 Ohio St.", "16 TCU", "8 St. John's", "9 Northern Iowa", 
-    "5 Kansas", "12 Cal Baptist", "4 Louisville", "13 South Florida",
-    "6 Seed (Region 2)", "11 Seed (Region 2)", "3 Seed (Region 2)", "14 Seed (Region 2)", 
-    "7 Seed (Region 2)", "10 Seed (Region 2)", "2 Seed (Region 2)", "15 Seed (Region 2)",
-    // Region 3
-    "1 Seed (Region 3)", "16 Seed (Region 3)", "8 Seed (Region 3)", "9 Seed (Region 3)", 
-    "5 Seed (Region 3)", "12 Seed (Region 3)", "4 Seed (Region 3)", "13 Seed (Region 3)",
-    "6 Seed (Region 3)", "11 Seed (Region 3)", "3 Seed (Region 3)", "14 Seed (Region 3)", 
-    "7 Seed (Region 3)", "10 Seed (Region 3)", "2 Seed (Region 3)", "15 Seed (Region 3)",
-    // Region 4
-    "1 Seed (Region 4)", "16 Seed (Region 4)", "8 Seed (Region 4)", "9 Seed (Region 4)", 
-    "5 Seed (Region 4)", "12 Seed (Region 4)", "4 Seed (Region 4)", "13 Seed (Region 4)",
-    "6 Seed (Region 4)", "11 Seed (Region 4)", "3 Seed (Region 4)", "14 Seed (Region 4)", 
-    "7 Seed (Region 4)", "10 Seed (Region 4)", "2 Seed (Region 4)", "15 Seed (Region 4)"
+    "6 BYU", "11 NC State/Texas", "3 Gonzaga", "14 Kennesaw St.", 
+    "7 Miami (FL)", "10 Missouri", "2 Purdue", "15 Queens (N.C.)",
+    
+    // Region 4 (Midwest)
+    "1 Michigan", "16 Howard/UMBC", "8 Georgia", "9 Saint Louis", 
+    "5 Texas Tech", "12 Akron", "4 Alabama", "13 Hofstra",
+    "6 Tennessee", "11 SMU/Miami (OH)", "3 Virginia", "14 Wright St.", 
+    "7 Kentucky", "10 Santa Clara", "2 Iowa St.", "15 Tennessee St."
 ];
 
 const womensTeams = [
-    // Region 1
+    // Region 1 (Storrs)
     "1 UConn", "16 UTSA", "8 Iowa St.", "9 Syracuse", 
     "5 Maryland", "12 Murray St.", "4 North Carolina", "13 Western Ill.",
     "6 Notre Dame", "11 Fairfield", "3 Ohio St.", "14 Howard", 
-    "7 Illinois", "10 Colorado", "2 Vanderbilt", "15 TBD",
-    // Region 2
+    "7 Illinois", "10 Colorado", "2 Vanderbilt", "15 High Point",
+    
+    // Region 2 (Columbia)
+    "1 South Carolina", "16 Southern U./Samford", "8 Clemson", "9 Southern California", 
+    "5 Michigan St.", "12 Colorado St.", "4 Oklahoma", "13 Idaho",
+    "6 Washington", "11 South Dakota St.", "3 TCU", "14 UC San Diego", 
+    "7 Georgia", "10 Virginia/Arizona St.", "2 Iowa", "15 FDU",
+    
+    // Region 3 (Los Angeles)
     "1 UCLA", "16 California Baptist", "8 Oklahoma St.", "9 Princeton", 
     "5 Ole Miss", "12 Gonzaga", "4 Minnesota", "13 Green Bay",
-    "6 Baylor", "11 Duke", "3 Nebraska", "14 Richmond", 
-    "7 Seed (Region 2)", "10 Seed (Region 2)", "2 Seed (Region 2)", "15 Seed (Region 2)",
-    // Region 3
-    "1 Seed (Region 3)", "16 Seed (Region 3)", "8 Seed (Region 3)", "9 Seed (Region 3)", 
-    "5 Seed (Region 3)", "12 Seed (Region 3)", "4 Seed (Region 3)", "13 Seed (Region 3)",
-    "6 Seed (Region 3)", "11 Seed (Region 3)", "3 Seed (Region 3)", "14 Seed (Region 3)", 
-    "7 Seed (Region 3)", "10 Seed (Region 3)", "2 Seed (Region 3)", "15 Seed (Region 3)",
-    // Region 4
-    "1 Seed (Region 4)", "16 Seed (Region 4)", "8 Seed (Region 4)", "9 Seed (Region 4)", 
-    "5 Seed (Region 4)", "12 Seed (Region 4)", "4 Seed (Region 4)", "13 Seed (Region 4)",
-    "6 Seed (Region 4)", "11 Seed (Region 4)", "3 Seed (Region 4)", "14 Seed (Region 4)", 
-    "7 Seed (Region 4)", "10 Seed (Region 4)", "2 Seed (Region 4)", "15 Seed (Region 4)"
+    "6 Baylor", "11 Nebraska/Richmond", "3 Duke", "14 Col. of Charleston", 
+    "7 Texas Tech", "10 Villanova", "2 LSU", "15 Jacksonville",
+    
+    // Region 4 (Austin)
+    "1 Texas", "16 Missouri St./SFA", "8 Oregon", "9 Virginia Tech", 
+    "5 Kentucky", "12 James Madison", "4 West Virginia", "13 Miami (OH)",
+    "6 Alabama", "11 Rhode Island", "3 Louisville", "14 Vermont", 
+    "7 NC State", "10 Tennessee", "2 Michigan", "15 Holy Cross"
 ];
-
 // 2. THE AUTO-GENERATOR ENGINE
 function generateBracket(prefix, teams) {
     let games = [];
