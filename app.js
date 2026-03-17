@@ -166,30 +166,43 @@ function clearFutureRounds(startId, oldWinner) {
     }
 }
 
-// 3. PDF GENERATION (Clean & Centered)
+// 3. PDF GENERATION (The "Auto-Margin" Fix)
 function downloadPDF() {
-    // CRITICAL FIX: Scroll to the absolute top of the page before snapping the picture.
-    // This stops the PDF camera from getting confused about where the left edge is.
     window.scrollTo(0, 0);
-    
     const element = document.getElementById('pdf-content');
+    const mainContainer = document.querySelector('.container'); // We must grab the parent container!
+    
     const btn = document.querySelector('.pdf-btn');
     const originalText = btn.textContent;
     btn.textContent = "Generating PDF...";
     
+    // CRITICAL FIX: Strip the centering from the whole page so the PDF camera starts at zero
+    const originalMargin = mainContainer.style.margin;
+    const originalMaxWidth = mainContainer.style.maxWidth;
+    
+    mainContainer.style.margin = '0';
+    mainContainer.style.maxWidth = '800px';
+    element.style.padding = '15px'; // Add a clean white border
+    
     const opt = {
-        margin:       0.4, // Gives it a nice, even border on the physical page
+        margin:       0.2, 
         filename:     `TPS_Report_${currentDivision}_2026.pdf`,
         image:        { type: 'jpeg', quality: 1 },
         html2canvas:  { 
             scale: 2, 
-            windowWidth: 800 // Forces the layout to stay wide like a desktop monitor
+            windowWidth: 850, // Give the camera slightly more room than the 800px container
+            scrollX: 0,
+            scrollY: 0
         },
         pagebreak:    { mode: ['css', 'legacy'] },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
     
     html2pdf().set(opt).from(element).save().then(() => {
+        // Put the page back exactly how we found it
+        mainContainer.style.margin = originalMargin;
+        mainContainer.style.maxWidth = originalMaxWidth;
+        element.style.padding = '0';
         btn.textContent = originalText;
     });
 }
