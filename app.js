@@ -228,7 +228,7 @@ function setupForm() {
         });
 
         // REPLACE WITH YOUR NEW GOOGLE SCRIPT URL
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyM85vzLkko5NdDRn_FDq5-qcGc8raIY03KXEgXvx_QhVVzO6N-CuxF_GBFGV1m1IUp/exec'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQQYOquPiiTDyknM4uRV42Kx4cptyVVV9_NZ0xUrBHsPnP8rhA7A6S8mvXlTXfh5lT/exec'; 
 
         fetch(scriptURL, { 
             method: 'POST', 
