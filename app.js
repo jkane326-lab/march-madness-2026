@@ -257,8 +257,12 @@ function setupForm() {
         // REPLACE WITH YOUR NEW GOOGLE SCRIPT URL
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzQQYOquPiiTDyknM4uRV42Kx4cptyVVV9_NZ0xUrBHsPnP8rhA7A6S8mvXlTXfh5lT/exec'; 
 
+        // Use your existing script URL here
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQQYOquPiiTDyknM4uRV42Kx4cptyVVV9_NZ0xUrBHsPnP8rhA7A6S8mvXlTXfh5lT/exec'; 
+
         fetch(scriptURL, { 
             method: 'POST', 
+            mode: 'no-cors', // THIS IS THE MAGIC BULLET
             body: JSON.stringify(payload),
             headers: { "Content-Type": "text/plain;charset=utf-8" },
         })
@@ -273,5 +277,3 @@ function setupForm() {
             btn.textContent = "Submit to Management";
             btn.disabled = false;
         });
-    });
-}
