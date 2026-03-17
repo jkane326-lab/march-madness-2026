@@ -2,9 +2,9 @@
     --bg-color: #f4f7f6;
     --card-bg: #ffffff;
     --text-main: #333333;
-    --primary: #0056b3; /* Corporate Blue */
+    --primary: #0056b3; 
     --primary-hover: #004494;
-    --accent: #ff8c00; /* Basketball Orange */
+    --accent: #ff8c00; 
     --border: #cccccc;
     --radius: 6px;
 }
@@ -51,7 +51,6 @@ header {
     padding: 0 1rem;
 }
 
-/* Matchup Cards */
 .round-section {
     margin-bottom: 2rem;
     background: var(--card-bg);
@@ -66,7 +65,7 @@ header {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid var(--border);
-    /* These prevent the PDF from slicing games in half */
+    /* CRITICAL: Stops the PDF from cutting matchups in half */
     page-break-inside: avoid;
     break-inside: avoid;
 }
@@ -98,7 +97,11 @@ header {
     font-weight: bold;
 }
 
-/* Forms and Buttons */
+.team-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .user-info {
     background: var(--card-bg);
     padding: 2rem;
