@@ -216,21 +216,19 @@ function downloadPDF() {
     element.style.padding = "20px";
     
     const opt = {
-        margin:       [0.5, 0.5, 0.5, 0.5], // Top, Left, Bottom, Right margins
+        margin:       [0.5, 0.5, 0.5, 0.5], 
         filename:     `TPS_Report_${currentDivision}_2026.pdf`,
         image:        { type: 'jpeg', quality: 1 },
         html2canvas:  { 
             scale: 2, 
             scrollY: 0, 
-            // CRITICAL FIX: Forces the PDF to render as if it's on an 800px wide computer screen
-            windowWidth: 800 
+            windowWidth: 800 // CRITICAL FIX: Stops the squished text
         },
         pagebreak:    { mode: ['css', 'legacy'] },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        jsPDF:        { unit: 'in', format: 'legal', orientation: 'portrait' }
     };
     
     html2pdf().set(opt).from(element).save().then(() => {
-        // Reset the styling after the PDF finishes downloading
         element.style.backgroundColor = "transparent";
         element.style.padding = "0";
     });
