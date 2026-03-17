@@ -1,0 +1,159 @@
+:root {
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --primary: #0056b3; /* Corporate Blue */
+    --primary-hover: #004494;
+    --accent: #ff8c00; /* Basketball Orange */
+    --border: #cccccc;
+    --radius: 6px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.toggle-container {
+    margin-top: 1.5rem;
+}
+
+.toggle-btn {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 0 5px;
+    border-radius: var(--radius);
+}
+
+.toggle-btn.active, .toggle-btn:hover {
+    background: white;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Matchup Cards */
+.round-section {
+    margin-bottom: 2rem;
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.matchup {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.matchup:last-child {
+    border-bottom: none;
+}
+
+.team-option {
+    flex: 1;
+    padding: 10px;
+    margin: 0 5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+    background: #fafafa;
+}
+
+.team-option:hover {
+    border-color: var(--primary);
+}
+
+.team-option.selected {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    font-weight: bold;
+}
+
+/* Forms and Buttons */
+.user-info {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-top: 2rem;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 20px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-sizing: border-box;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+button.pdf-btn, button.submit-btn {
+    flex: 1;
+    padding: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+button.pdf-btn {
+    background: #6c757d;
+    color: white;
+}
+
+button.submit-btn {
+    background: var(--accent);
+    color: white;
+}
+
+#success-message {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: var(--radius);
+    margin-top: 2rem;
+}
+
+.pay-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #0070BA;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: var(--radius);
+    margin-top: 1rem;
+}
