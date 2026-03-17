@@ -211,16 +211,29 @@ function clearFutureRounds(startId, oldWinner) {
 function downloadPDF() {
     const element = document.getElementById('pdf-content');
     
-    // FIX: scrollY: 0 stops the "blank page" bug.
-    // Orientation: 'landscape' gives the bracket more room to breathe!
+    // Temporarily change the background so the PDF looks clean and white
+    element.style.backgroundColor = "white";
+    element.style.padding = "20px";
+    
     const opt = {
-        margin:       0.5,
+        margin:       [0.5, 0.5, 0.5, 0.5], // Top, Left, Bottom, Right margins
         filename:     `TPS_Report_${currentDivision}_2026.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, scrollY: 0, windowWidth: 1100 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { 
+            scale: 2, 
+            scrollY: 0, 
+            // CRITICAL FIX: Forces the PDF to render as if it's on an 800px wide computer screen
+            windowWidth: 800 
+        },
+        pagebreak:    { mode: ['css', 'legacy'] },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-    html2pdf().set(opt).from(element).save();
+    
+    html2pdf().set(opt).from(element).save().then(() => {
+        // Reset the styling after the PDF finishes downloading
+        element.style.backgroundColor = "transparent";
+        element.style.padding = "0";
+    });
 }
 
 function setupForm() {
