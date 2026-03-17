@@ -110,6 +110,19 @@ function switchBracket(division) {
     document.getElementById('btn-womens').classList.remove('active');
     document.getElementById(`btn-${division}`).classList.add('active');
     document.getElementById('current-division-title').innerText = division === 'mens' ? "Men's Division Candidates" : "Women's Division Candidates";
+    
+    // FIX: Reset the submission form UI when switching brackets!
+    const userInfo = document.querySelector('.user-info');
+    const successMsg = document.getElementById('success-message');
+    const btn = document.getElementById('submit-btn');
+    
+    if(userInfo) userInfo.style.display = 'block';
+    if(successMsg) successMsg.style.display = 'none';
+    if(btn) {
+        btn.textContent = "2. Submit to Management";
+        btn.disabled = false;
+    }
+
     renderBracket();
 }
 
@@ -197,12 +210,15 @@ function clearFutureRounds(startId, oldWinner) {
 
 function downloadPDF() {
     const element = document.getElementById('pdf-content');
+    
+    // FIX: scrollY: 0 stops the "blank page" bug.
+    // Orientation: 'landscape' gives the bracket more room to breathe!
     const opt = {
         margin:       0.5,
         filename:     `TPS_Report_${currentDivision}_2026.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        html2canvas:  { scale: 2, scrollY: 0, windowWidth: 1100 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' }
     };
     html2pdf().set(opt).from(element).save();
 }
